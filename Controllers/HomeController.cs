@@ -13,14 +13,23 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [HttpGet]
     public IActionResult Index()
     {
-        return View();
+        return View(new InputModel());
     }
 
-    public IActionResult Privacy()
+    [HttpPost]
+    public IActionResult Index(InputModel inputModel)
     {
-        return View();
+        if (string.IsNullOrWhiteSpace(inputModel.UserInput))
+        {
+            ModelState.AddModelError("UserInput", "Please enter valid input.");
+            return View(inputModel);
+        }
+
+        ViewBag.Result = inputModel.UserInput;
+        return View(inputModel);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
