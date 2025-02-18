@@ -2,6 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model SearchModel
+
 <div class="text-center">
     <h1 class="display-4">Voyado Tech Check</h1>
 </div>
@@ -15,5 +17,5 @@
 
 <div class="text-center">
     <h4 class="display-6">Results:</h4>
-    <p>@ViewBag.Result</p>
+    <p>Google Results: @Model.TotalGoogleSearchHits</p>
 </div>
