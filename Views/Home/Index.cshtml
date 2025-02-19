@@ -1,8 +1,8 @@
-﻿@{
+﻿@model VoyadoTechCheck.Models.SearchModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
-
-@model SearchModel
 
 <div class="text-center">
     <h1 class="display-4">Voyado Tech Check</h1>
@@ -15,15 +15,21 @@
     </form>
 </div>
 
-<div class="text-center">
+<div class="parent">
 
-    <div class="">
-        <h4 class="display-6">Google Results:</h4>
-        <p>Google Results: @Model.TotalGoogleSearchHits</p>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <p>Error please try again</p>
+    }
+    else {
+    <div class="child">
+        <h5>Google Hits</h5>
+        <p>@Model.TotalGoogleSearchHits</p>
     </div>
 
-    <div class="">
-        <h4 class="display-6">Algolia Results:</h4>
-        <p>Algolia Results: @Model.TotalAlgoliaSearchHits</p>
+    <div class="child">
+        <h5>Algolia Hits</h5>
+        <p>@Model.TotalAlgoliaSearchHits</p>
     </div>
+    }
 </div>
