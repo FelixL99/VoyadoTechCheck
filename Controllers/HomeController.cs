@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using VoyadoTechCheck.Models;
-using System.Runtime.InteropServices;
-using System.Diagnostics.Eventing.Reader;
+
+// Algolia API
+using Algolia.Search.Clients;
+using Algolia.Search.Models.Search;
 
 namespace VoyadoTechCheck.Controllers;
 
@@ -44,12 +43,37 @@ public class HomeController : Controller
         foreach (string word in words)
         {
             searchModel.TotalGoogleSearchHits += await SearchGoogle(word);
+            searchModel.TotalAlgoliaSearchHits += await SearchAlgolia(word);
         }
 
         return View(searchModel);
     }
 
+    // SearchAlgolia - Calls Algolia Search API and return number of hits
+    // Doc: https://www.algolia.com/doc/libraries/csharp/v7/
+    private async Task<long> SearchAlgolia(string word)
+    {
+        // Setup Algolia API to get AppID and api key
+        // https://dashboard.algolia.com/apps/1SQES8SXAC/dashboard
+        string ApplicationId = "1SQES8SXAC";
+        string apiKey = "1c3400b473280bce2cbf095fb170baa1";
+
+        // Index is loaded with the following dataset
+        // https://www.kaggle.com/datasets/krishnanshverma/imdb-movies-dataset
+        string IndexName = "VoyadoTechCheck";
+
+        // Setup Algolia SearchClient
+        var client = new SearchClient(ApplicationId, apiKey);
+
+        // Search for word in with Algolia Search API
+        var searchResults = client.SearchSingleIndex<Hit>(IndexName, new SearchParams(new SearchParamsObject { Query = word }));
+
+        // Return search hits
+        return searchResults.Hits.Count;
+    }
+
     // SearchGoogle - Calls Google Custom Search API and return parsed result
+    // Doc: https://developers.google.com/custom-search/v1/overview
     private async Task<long> SearchGoogle(string word)
     {
         // Setup Custom Search JSON API to get apiKey and cx and url
