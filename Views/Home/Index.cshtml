@@ -19,7 +19,7 @@
 
     @if (!ViewData.ModelState.IsValid)
     {
-        <p>Error please try again</p>
+        <p>@Html.ValidationMessageFor(m => m.UserInput)</p>
     }
     else {
     <div class="child">
